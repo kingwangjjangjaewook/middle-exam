@@ -27,7 +27,25 @@ app.post('/todo', (req, res) => {
   if (text) todos.push({ id: nextId++, text });
   res.redirect('/');
 });
+// 할 일 수정
+app.put('/todo/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const todo = todos.find((item) => item.id === id);
 
+  if (!todo) {
+    return res.status(404).send('할 일을 찾을 수 없습니다.');
+  }
+
+  const text =
+    typeof req.body.text === 'string' ? req.body.text.trim() : '';
+
+  if (!text) {
+    return res.status(400).send('수정할 내용을 입력하세요.');
+  }
+
+  todo.text = text;
+  res.redirect('/');
+});
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
 });
